@@ -1,9 +1,20 @@
+/*
+ *	Name				: main.c
+ *	Author			: Chun-Hsiang Chao
+ *	Language		: C
+ *	Latest Revision	: 20191113
+ */
 #include <stdio.h>
 #include <string.h>
 #include "my_table.h"
+#include "gd.h"
 
 #define row_number_d 10
 #define column_number_d 4
+
+#define PI 3.141592
+#define DELTA (PI/8)
+
 
 double date_to_double(char *date){
 	double return_date;
@@ -90,10 +101,17 @@ double time_to_double(char *time_tt){
 }
 
 int main(void){
-	int row_number;
-	int column_number;
-	register int i=0;
-	double *rand_record;
+  /* Declare the image */
+  gdImagePtr im;
+  /* Declare output files */
+  FILE *pngout, *jpegout;
+  /* Declare color indexes */
+	int brect[8];
+	char font[]="/usr/share/fonts/truetype/Noto_Serif_TC/NotoSerifTC-Light.otf";
+  int black;
+  int white;
+	int green;
+	int red;
 
 	object *ob=(object *)malloc(sizeof(object));
 	ob->top=NULL;
@@ -121,9 +139,41 @@ int main(void){
 
 #if 1
 	printf("source table\n");
-	print_list(ob);
+	//print_list(ob);
 	printf("---------------------------------------------\n");
 
 #endif
+
+  im = gdImageCreate(800, 800);
+  black = gdImageColorAllocate(im, 0, 0, 0);  
+  white = gdImageColorAllocate(im, 255, 255, 255);  
+	red = gdImageColorAllocate(im, 255, 0, 0);	
+	green = gdImageColorAllocate(im, 0, 255, 0);	
+	gdImageFilledRectangle(im, 0, 0,799,799, white);	
+  gdImageLine(im, 99, 699, 699, 699, black);  
+  gdImageLine(im, 99, 99, 99, 699, black);  
+
+	gdImageStringFT(im, brect, black, font, 24, DELTA*0, 399, 749,"Time");
+	gdImageStringFT(im, brect, black, font, 24, DELTA*4, 49, 399,"V and C");
+#if 0	
+	gdImageFilledEllipse(im,400,400,30,30,black);
+	gdImageFilledRectangle(im, 400, 400,799,799, white);	
+	gdImageRectangle(im, 200, 200,300,200, black);
+	
+	gdImageSetThickness(im, 5);
+	gdImageLine(im,300,300,400,300,black);
+	gdImageSetThickness(im, 20);
+	gdImageSetAntiAliased(im,  red);
+	gdImageLine(im,300,330,400,330,gdAntiAliased);
+	gdImageDashedLine(im,300,350,400,350,black);
+	gdImageEllipse(im,200,200,60,60,black);
+	gdImageStringFT(im, brect, black, font, 24, DELTA*0, 300, 300,"ABC中文");
+#endif
+  pngout = fopen("test.png", "wb");
+  gdImagePng(im, pngout);
+  fclose(pngout);
+  gdImageDestroy(im);
+
+
 
 }
