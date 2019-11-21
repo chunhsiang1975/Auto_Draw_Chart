@@ -15,7 +15,6 @@
 #define PI 3.141592
 #define DELTA (PI/8)
 
-
 double date_to_double(char *date){
 	double return_date;
 	char year[5],month[3],day[3];
@@ -101,6 +100,8 @@ double time_to_double(char *time_tt){
 }
 
 int main(void){
+	int chart_x_number=20;
+	int chart_y_number=18;
   /* Declare the image */
   gdImagePtr im;
   /* Declare output files */
@@ -112,10 +113,16 @@ int main(void){
   int white;
 	int green;
 	int red;
+	int point_x,point_y;
+	char temp[30];
+	int i;
 
 	object *ob=(object *)malloc(sizeof(object));
 	ob->top=NULL;
 	ob->tail=NULL;
+
+	list *ob_point;
+	double time_min,time_max;
 
 #if 1
 	ob->column_number=4;
@@ -141,7 +148,6 @@ int main(void){
 	printf("source table\n");
 	//print_list(ob);
 	printf("---------------------------------------------\n");
-
 #endif
 
   im = gdImageCreate(800, 800);
@@ -154,7 +160,33 @@ int main(void){
   gdImageLine(im, 99, 99, 99, 699, black);  
 
 	gdImageStringFT(im, brect, black, font, 24, DELTA*0, 399, 749,"Time");
-	gdImageStringFT(im, brect, black, font, 24, DELTA*4, 49, 399,"V and C");
+	gdImageStringFT(im, brect, black, font, 24, DELTA*4, 49, 399,"Voltage");
+
+	time_min=ob->top->record[1];
+	time_max=ob->tail->record[1];
+	printf("%lf\n",time_min);
+	printf("%lf\n",time_max);
+	printf("%d\n",ob->row_number);
+	printf("%lf\n",ob->top->record[2]);
+	printf("%lf\n",ob->top->record[3]);
+
+	ob_point=ob->top;
+	for(i=0;i<chart_x_number;i++){
+		if(ob_point==NULL) break;
+		sprintf(temp,"%.0lf",ob_point->record[1]);
+		gdImageStringFT(im, brect, red, font, 24, DELTA*(-3), 99+30*i, 699,temp);
+
+
+		gdImageFilledEllipse(im,99+20+30*i,710-12-35*ob_point->record[2],20,20,black);
+		ob_point=ob_point->down;
+	}
+
+
+	for(i=0;i<chart_y_number;i++){
+		sprintf(temp,"%d",i);
+		gdImageStringFT(im, brect, red, font, 24, DELTA*(0), 59, 710-35*i,temp);
+	}
+
 #if 0	
 	gdImageFilledEllipse(im,400,400,30,30,black);
 	gdImageFilledRectangle(im, 400, 400,799,799, white);	
@@ -173,7 +205,6 @@ int main(void){
   gdImagePng(im, pngout);
   fclose(pngout);
   gdImageDestroy(im);
-
 
 
 }

@@ -1,3 +1,9 @@
+/*
+ *	Name				: get_data.c
+ *	Author			: Chun-Hsiang Chao
+ *	Language		: C
+ *	Latest Revision	: 20191113
+ */
 #include<stdio.h>
 #include"my_find_string.h"
 
