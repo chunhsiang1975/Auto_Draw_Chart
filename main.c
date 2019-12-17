@@ -100,8 +100,10 @@ double time_to_double(char *time_tt){
 }
 
 int main(void){
-	int chart_x_number=20;
+	int chart_x_number=24;
 	int chart_y_number=18;
+	int x_unit=25;
+	int y_unit=35;
   /* Declare the image */
   gdImagePtr im;
   /* Declare output files */
@@ -144,9 +146,9 @@ int main(void){
 #endif
 
 
-#if 1
+#if 0
 	printf("source table\n");
-	//print_list(ob);
+	print_list(ob);
 	printf("---------------------------------------------\n");
 #endif
 
@@ -164,28 +166,42 @@ int main(void){
 
 	time_min=ob->top->record[1];
 	time_max=ob->tail->record[1];
+
+#if 0
 	printf("%lf\n",time_min);
 	printf("%lf\n",time_max);
 	printf("%d\n",ob->row_number);
 	printf("%lf\n",ob->top->record[2]);
 	printf("%lf\n",ob->top->record[3]);
+	printf("%d\n",ob->row_number);
+#endif
+
+
+#if 1
+//print 24 hours
 
 	ob_point=ob->top;
 	for(i=0;i<chart_x_number;i++){
 		if(ob_point==NULL) break;
+
+		//print time
 		sprintf(temp,"%.0lf",ob_point->record[1]);
-		gdImageStringFT(im, brect, red, font, 24, DELTA*(-3), 99+30*i, 699,temp);
+		gdImageStringFT(im, brect, red, font, 18, DELTA*(-3), 99+x_unit*i, 699,temp);
 
-
-		gdImageFilledEllipse(im,99+20+30*i,710-12-35*ob_point->record[2],20,20,black);
+		//print point
+		gdImageFilledEllipse(im,99+20+x_unit*i,710-12-y_unit*ob_point->record[2],20,20,black);
 		ob_point=ob_point->down;
 	}
 
-
+	//print y unit
 	for(i=0;i<chart_y_number;i++){
 		sprintf(temp,"%d",i);
-		gdImageStringFT(im, brect, red, font, 24, DELTA*(0), 59, 710-35*i,temp);
+		gdImageStringFT(im, brect, red, font, 24, DELTA*(0), 59, 710-y_unit*i,temp);
 	}
+#endif
+
+
+
 
 #if 0	
 	gdImageFilledEllipse(im,400,400,30,30,black);
