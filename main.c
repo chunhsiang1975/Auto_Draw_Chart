@@ -161,7 +161,7 @@ int main(void){
   gdImageLine(im, 99, 699, 699, 699, black);  
   gdImageLine(im, 99, 99, 99, 699, black);  
 
-	gdImageStringFT(im, brect, black, font, 24, DELTA*0, 399, 749,"Time");
+	gdImageStringFT(im, brect, black, font, 24, DELTA*(-3), 60, 725,"Time");
 	gdImageStringFT(im, brect, black, font, 24, DELTA*4, 49, 399,"Voltage");
 
 	time_min=ob->top->record[1];
@@ -181,15 +181,21 @@ int main(void){
 //print 24 hours
 
 	ob_point=ob->top;
+	sprintf(temp,"%06.0lf",ob_point->record[0]);
+	gdImageStringFT(im, brect, black, font, 24, DELTA*0, 349, 48,temp);
 	for(i=0;i<chart_x_number;i++){
 		if(ob_point==NULL) break;
 
 		//print time
-		sprintf(temp,"%.0lf",ob_point->record[1]);
-		gdImageStringFT(im, brect, red, font, 18, DELTA*(-3), 99+x_unit*i, 699,temp);
+		sprintf(temp,"%06.0lf",ob_point->record[1]);
+		gdImageStringFT(im, brect, red, font, 18, DELTA*(-3), 99+x_unit*i, 720,temp);
 
 		//print point
-		gdImageFilledEllipse(im,99+20+x_unit*i,710-12-y_unit*ob_point->record[2],20,20,black);
+		gdImageFilledEllipse(im,99+18+x_unit*i,710-12-y_unit*ob_point->record[2],10,10,black);
+ 
+		//print x's short line 
+		gdImageLine(im, 99+18+x_unit*i, 699, 99+18+x_unit*i, 689, black);  
+
 		ob_point=ob_point->down;
 	}
 
@@ -197,6 +203,8 @@ int main(void){
 	for(i=0;i<chart_y_number;i++){
 		sprintf(temp,"%d",i);
 		gdImageStringFT(im, brect, red, font, 24, DELTA*(0), 59, 710-y_unit*i,temp);
+		//print y's short line 
+		gdImageLine(im, 99, 698-y_unit*i, 109, 698-y_unit*i, black);  
 	}
 #endif
 
