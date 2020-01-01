@@ -117,6 +117,7 @@ int main(void){
 	int red;
 	int point_x,point_y;
 	char temp[30];
+	char pic_filename[30];
 	int i;
 
 	object *ob=(object *)malloc(sizeof(object));
@@ -124,7 +125,6 @@ int main(void){
 	ob->tail=NULL;
 
 	list *ob_point;
-	double time_min,time_max;
 
 #if 1
 	ob->column_number=4;
@@ -132,6 +132,7 @@ int main(void){
   FILE *input_file;
   input_file=fopen("data.txt","r");
 	char date[25];
+	double date_temp;
 	char time_tt[25];
 	double *array;
 	array=(double *)malloc(sizeof(double)*ob->column_number);
@@ -152,6 +153,15 @@ int main(void){
 	printf("---------------------------------------------\n");
 #endif
 
+
+	int file_number=0;
+
+	ob_point=ob->top;
+	date_temp=ob_point->record[0];
+
+while(ob_point!=NULL){
+
+
   im = gdImageCreate(800, 800);
   black = gdImageColorAllocate(im, 0, 0, 0);  
   white = gdImageColorAllocate(im, 255, 255, 255);  
@@ -161,15 +171,20 @@ int main(void){
   gdImageLine(im, 99, 699, 699, 699, black);  
   gdImageLine(im, 99, 99, 99, 699, black);  
 
+	//draw date title
+
+	if(date_temp==ob_point->record[0]) date_temp=ob_point->record[0];
+	else  file_number=0;
+	sprintf(temp,"%06.0lf",ob_point->record[0]);
+	sprintf(pic_filename,"png/%06.0lf_%d.png",ob_point->record[0],file_number);
+	gdImageStringFT(im, brect, black, font, 24, DELTA*0, 349, 48,temp);
+
+	//draw x,y labels
 	gdImageStringFT(im, brect, black, font, 24, DELTA*(-3), 60, 725,"Time");
 	gdImageStringFT(im, brect, black, font, 24, DELTA*4, 49, 399,"Voltage");
 
-	time_min=ob->top->record[1];
-	time_max=ob->tail->record[1];
 
 #if 0
-	printf("%lf\n",time_min);
-	printf("%lf\n",time_max);
 	printf("%d\n",ob->row_number);
 	printf("%lf\n",ob->top->record[2]);
 	printf("%lf\n",ob->top->record[3]);
@@ -180,9 +195,6 @@ int main(void){
 #if 1
 //print 24 hours
 
-	ob_point=ob->top;
-	sprintf(temp,"%06.0lf",ob_point->record[0]);
-	gdImageStringFT(im, brect, black, font, 24, DELTA*0, 349, 48,temp);
 	for(i=0;i<chart_x_number;i++){
 		if(ob_point==NULL) break;
 
@@ -199,7 +211,7 @@ int main(void){
 		ob_point=ob_point->down;
 	}
 
-	//print y unit
+		//print y unit
 	for(i=0;i<chart_y_number;i++){
 		sprintf(temp,"%d",i);
 		gdImageStringFT(im, brect, red, font, 24, DELTA*(0), 59, 710-y_unit*i,temp);
@@ -207,9 +219,6 @@ int main(void){
 		gdImageLine(im, 99, 698-y_unit*i, 109, 698-y_unit*i, black);  
 	}
 #endif
-
-
-
 
 #if 0	
 	gdImageFilledEllipse(im,400,400,30,30,black);
@@ -225,10 +234,11 @@ int main(void){
 	gdImageEllipse(im,200,200,60,60,black);
 	gdImageStringFT(im, brect, black, font, 24, DELTA*0, 300, 300,"ABC中文");
 #endif
-  pngout = fopen("test.png", "wb");
+  pngout = fopen(pic_filename, "wb");
   gdImagePng(im, pngout);
   fclose(pngout);
   gdImageDestroy(im);
-
+	file_number++;
+}
 
 }
