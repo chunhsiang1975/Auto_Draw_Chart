@@ -2,7 +2,7 @@
  *	Name				: main.c
  *	Author			: Chun-Hsiang Chao
  *	Language		: C
- *	Latest Revision	: 20191113
+ *	Latest Revision	: 20200103
  */
 #include <stdio.h>
 #include <string.h>
@@ -154,91 +154,95 @@ int main(void){
 #endif
 
 
+//----------------------------print voltage start
+
+
 	int file_number=0;
 
 	ob_point=ob->top;
 	date_temp=ob_point->record[0];
 
-while(ob_point!=NULL){
-
-
-  im = gdImageCreate(800, 800);
-  black = gdImageColorAllocate(im, 0, 0, 0);  
-  white = gdImageColorAllocate(im, 255, 255, 255);  
-	red = gdImageColorAllocate(im, 255, 0, 0);	
-	green = gdImageColorAllocate(im, 0, 255, 0);	
-	gdImageFilledRectangle(im, 0, 0,799,799, white);	
-  gdImageLine(im, 99, 699, 699, 699, black);  
-  gdImageLine(im, 99, 99, 99, 699, black);  
-
-	//draw date title
-
-	if(date_temp==ob_point->record[0]) date_temp=ob_point->record[0];
-	else  file_number=0;
-	sprintf(temp,"%06.0lf",ob_point->record[0]);
-	sprintf(pic_filename,"png/%06.0lf_%d.png",ob_point->record[0],file_number);
-	gdImageStringFT(im, brect, black, font, 24, DELTA*0, 349, 48,temp);
-
-	//draw x,y labels
-	gdImageStringFT(im, brect, black, font, 24, DELTA*(-3), 60, 725,"Time");
-	gdImageStringFT(im, brect, black, font, 24, DELTA*4, 49, 399,"Voltage");
-
-
-#if 0
-	printf("%d\n",ob->row_number);
-	printf("%lf\n",ob->top->record[2]);
-	printf("%lf\n",ob->top->record[3]);
-	printf("%d\n",ob->row_number);
-#endif
-
-
-#if 1
-//print 24 hours
-
-	for(i=0;i<chart_x_number;i++){
-		if(ob_point==NULL) break;
-
-		//print time
-		sprintf(temp,"%06.0lf",ob_point->record[1]);
-		gdImageStringFT(im, brect, red, font, 18, DELTA*(-3), 99+x_unit*i, 720,temp);
-
-		//print point
-		gdImageFilledEllipse(im,99+18+x_unit*i,710-12-y_unit*ob_point->record[2],10,10,black);
- 
-		//print x's short line 
-		gdImageLine(im, 99+18+x_unit*i, 699, 99+18+x_unit*i, 689, black);  
-
-		ob_point=ob_point->down;
-	}
-
-		//print y unit
-	for(i=0;i<chart_y_number;i++){
-		sprintf(temp,"%d",i);
-		gdImageStringFT(im, brect, red, font, 24, DELTA*(0), 59, 710-y_unit*i,temp);
-		//print y's short line 
-		gdImageLine(im, 99, 698-y_unit*i, 109, 698-y_unit*i, black);  
-	}
-#endif
-
-#if 0	
-	gdImageFilledEllipse(im,400,400,30,30,black);
-	gdImageFilledRectangle(im, 400, 400,799,799, white);	
-	gdImageRectangle(im, 200, 200,300,200, black);
+	while(ob_point!=NULL){
 	
-	gdImageSetThickness(im, 5);
-	gdImageLine(im,300,300,400,300,black);
-	gdImageSetThickness(im, 20);
-	gdImageSetAntiAliased(im,  red);
-	gdImageLine(im,300,330,400,330,gdAntiAliased);
-	gdImageDashedLine(im,300,350,400,350,black);
-	gdImageEllipse(im,200,200,60,60,black);
-	gdImageStringFT(im, brect, black, font, 24, DELTA*0, 300, 300,"ABC中文");
+	
+	  im = gdImageCreate(800, 800);
+	  black = gdImageColorAllocate(im, 0, 0, 0);  
+	  white = gdImageColorAllocate(im, 255, 255, 255);  
+		red = gdImageColorAllocate(im, 255, 0, 0);	
+		green = gdImageColorAllocate(im, 0, 255, 0);	
+		gdImageFilledRectangle(im, 0, 0,799,799, white);	
+	  gdImageLine(im, 99, 699, 699, 699, black);  
+	  gdImageLine(im, 99, 99, 99, 699, black);  
+	
+		//draw date title
+	
+		if(date_temp==ob_point->record[0]) date_temp=ob_point->record[0];
+		else  file_number=0;
+		sprintf(temp,"%06.0lf",ob_point->record[0]);
+		sprintf(pic_filename,"png/%06.0lf_voltage_%d.png",ob_point->record[0],file_number);
+		gdImageStringFT(im, brect, black, font, 24, DELTA*0, 349, 48,temp);
+	
+		//draw x,y labels
+		gdImageStringFT(im, brect, black, font, 24, DELTA*(-3), 60, 725,"Time");
+		gdImageStringFT(im, brect, black, font, 24, DELTA*4, 49, 399,"Voltage");
+	
+	
+#if 0
+		printf("%d\n",ob->row_number);
+		printf("%lf\n",ob->top->record[2]);
+		printf("%lf\n",ob->top->record[3]);
+		printf("%d\n",ob->row_number);
 #endif
-  pngout = fopen(pic_filename, "wb");
-  gdImagePng(im, pngout);
-  fclose(pngout);
-  gdImageDestroy(im);
-	file_number++;
-}
+	
+	
+#if 1
+	//print 24 hours
+	
+		for(i=0;i<chart_x_number;i++){
+			if(ob_point==NULL) break;
+	
+			//print time
+			sprintf(temp,"%06.0lf",ob_point->record[1]);
+			gdImageStringFT(im, brect, red, font, 18, DELTA*(-3), 99+x_unit*i, 720,temp);
+	
+			//print point
+			gdImageFilledEllipse(im,99+18+x_unit*i,710-12-y_unit*ob_point->record[2],10,10,black);
+	 
+			//print x's short line 
+			gdImageLine(im, 99+18+x_unit*i, 699, 99+18+x_unit*i, 689, black);  
+	
+			ob_point=ob_point->down;
+		}
+	
+			//print y unit
+		for(i=0;i<chart_y_number;i++){
+			sprintf(temp,"%d",i);
+			gdImageStringFT(im, brect, red, font, 24, DELTA*(0), 59, 710-y_unit*i,temp);
+			//print y's short line 
+			gdImageLine(im, 99, 698-y_unit*i, 109, 698-y_unit*i, black);  
+		}
+#endif
+	
+#if 0	
+		gdImageFilledEllipse(im,400,400,30,30,black);
+		gdImageFilledRectangle(im, 400, 400,799,799, white);	
+		gdImageRectangle(im, 200, 200,300,200, black);
+		
+		gdImageSetThickness(im, 5);
+		gdImageLine(im,300,300,400,300,black);
+		gdImageSetThickness(im, 20);
+		gdImageSetAntiAliased(im,  red);
+		gdImageLine(im,300,330,400,330,gdAntiAliased);
+		gdImageDashedLine(im,300,350,400,350,black);
+		gdImageEllipse(im,200,200,60,60,black);
+		gdImageStringFT(im, brect, black, font, 24, DELTA*0, 300, 300,"ABC中文");
+#endif
+	  pngout = fopen(pic_filename, "wb");
+	  gdImagePng(im, pngout);
+	  fclose(pngout);
+	  gdImageDestroy(im);
+		file_number++;
+	}
+//----------------------------print voltage end
 
 }
